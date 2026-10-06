@@ -71,6 +71,8 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body)
 .sgrp{display:flex;align-items:center;gap:12px}
 .sgrp .lab b{font:400 28px/1 var(--f-display);color:var(--blue);letter-spacing:0;margin-left:8px;display:inline-block;min-width:30px}
 #simVN{min-width:64px} #simVT{min-width:48px}
+.pval{font:600 18px/1 var(--f-body);color:var(--muted);white-space:nowrap}
+.pval b{font:400 28px/1 var(--f-display);color:var(--blue);margin-left:8px}
 .sim input[type=range]{width:150px;accent-color:var(--blue);margin:0}
 .pop{width:110px;height:20px;display:flex;border:2px solid var(--ink);border-radius:10px;overflow:hidden;flex:none}
 .pop i{display:block;height:100%;transition:width .45s cubic-bezier(.3,.7,.2,1)}
@@ -145,7 +147,7 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body)
 #simRunSum{position:absolute;left:0;right:0;bottom:0;margin:0;padding:13px 20px;background:var(--code-head);font:600 19px/1.3 var(--f-body);color:var(--code-txt);white-space:nowrap}
 #simRunSum b{color:var(--gold)}
 
-.sim .chart{height:244px}
+.sim .chart{height:270px}
 #simChartA{width:1000px} #simChartB{width:644px}
 .chead{position:absolute;left:20px;right:20px;top:12px;display:flex;align-items:baseline;justify-content:space-between;gap:12px}
 .chead h3{font:400 26px/1 var(--f-display);margin:0;white-space:nowrap}
@@ -159,7 +161,7 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body)
 .dash{display:inline-block;width:24px;height:0;border-top:4px dashed var(--gold)}
 
 /* the pulse around the newest average point while the chart is still (the compositor animates it: no redraws) */
-#simPulseBox{position:absolute;left:16px;top:46px;width:960px;height:160px;overflow:hidden;pointer-events:none}
+#simPulseBox{position:absolute;left:16px;top:46px;width:960px;height:184px;overflow:hidden;pointer-events:none}
 #simPulse{position:absolute;left:0;top:0;width:24px;height:24px;display:none}
 #simPulse i{display:block;width:24px;height:24px;border-radius:50%;background:rgba(22,93,156,.18);animation:simPulse 1633.628ms cubic-bezier(.37,0,.63,1) infinite}
 @keyframes simPulse{0%,100%{transform:scale(.75)}50%{transform:scale(1.25)}}
@@ -172,7 +174,7 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body)
 <div id="simControls" class="scard" aria-label="Settings">
   <div class="seg" id="simDice" role="group" aria-label="The order"><button data-v="fair" aria-pressed="true">Random order</button><button data-v="bad" aria-pressed="false">Worst order</button></div>
   <div class="sgrp"><label class="lab" for="simN">Toads<b id="simVN">7</b></label><input id="simN" type="range" min="0" max="27" step="1" value="2" aria-valuetext="7 toads"></div>
-  <div class="sgrp"><label class="lab" for="simT">Tricky<b id="simVT">3</b></label><input id="simT" type="range" min="0" max="3" step="1" value="3"><div class="pop" title="trustworthy vs tricky"><i id="simPopH"></i><i id="simPopT"></i></div></div>
+  <div class="sgrp"><label class="lab" for="simT">Tricky<b id="simVT">3</b></label><input id="simT" type="range" min="0" max="3" step="1" value="3"><div class="pop" title="trustworthy vs tricky"><i id="simPopH"></i><i id="simPopT"></i></div><span class="pval" id="simPVal">p = t/n =<b>4/7</b></span></div>
   <div class="seg" id="simSpeed" role="group" aria-label="Speed"><button data-v="slow" aria-pressed="false">Slow</button><button data-v="normal" aria-pressed="true">Normal</button><button data-v="fast" aria-pressed="false">Fast</button></div>
 </div>
 <div class="simRow">
@@ -201,18 +203,18 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body)
   </div>
 </div>
 <div class="simRow">
-  <div id="simChartA" class="scard chart" aria-label="Average questions per run">
-    <div class="chead"><h3>Average questions per run</h3><p id="simRoA"></p></div>
-    <canvas id="simCA" width="960" height="160"></canvas><div id="simPulseBox" aria-hidden="true"><div id="simPulse"><i></i></div></div>
-    <div class="legend"><span><i class="dot"></i>one run</span><span><i class="sw" style="background:var(--blue)"></i>running average</span><span><i class="dash"></i>reference</span><span>runs on a log scale</span></div>
+  <div id="simChartA" class="scard chart" aria-label="Asks in each run and their running average">
+    <div class="chead"><h3>Asks in each run</h3><p id="simRoA"></p></div>
+    <canvas id="simCA" width="960" height="184"></canvas><div id="simPulseBox" aria-hidden="true"><div id="simPulse"><i></i></div></div>
+    <div class="legend"><span><i class="dot"></i>one run</span><span><i class="sw" style="background:var(--blue)"></i>running average</span><span><i class="dash"></i><span id="simTheoryLegend"></span></span></div>
   </div>
-  <div id="simChartB" class="scard chart" aria-label="Questions each run needed">
-    <div class="chead"><h3>Questions each run needed</h3><p id="simRoB"></p></div>
-    <canvas id="simCB" width="604" height="160"></canvas>
-    <div class="legend"><span><i class="sw" style="background:var(--sky)"></i>share of runs</span></div>
+  <div id="simChartB" class="scard chart" aria-label="How many asks each run needed">
+    <div class="chead"><h3>Asks a run needed</h3><p id="simRoB"></p></div>
+    <canvas id="simCB" width="604" height="184"></canvas>
+    <div class="legend"><span><i class="sw" style="background:var(--sky)"></i><span id="simHistNote"></span></span></div>
   </div>
 </div>
-<p style="position:relative;margin:0;font-size:20px;line-height:1.3;color:#626970;flex:none"><b>Space</b> play / pause &#160;·&#160; <b>Enter</b> one run &#160;·&#160; <b>A</b> keep playing &#160;·&#160; <b>Q</b> +100 runs &#160;·&#160; <b>R</b> reset &#160;·&#160; <b>F</b> full screen &#160;·&#160; the sliders change the number of toads and tricky toads</p>
+<p style="position:relative;margin:0;font-size:20px;line-height:1.35;color:#626970;flex:none"><b>t</b> = the number of trustworthy toads (t &gt; n/2), <b>p = t/n</b>. A run's running time = n shuffle steps + asks. Gold line: in a random order the average stays under the bound <b>1/p&#160;=&#160;n/t</b>&#160;asks; in the worst order (every tricky toad first) every run needs <b>n&#160;−&#160;t&#160;+&#160;1</b>&#160;asks.</p><p style="position:relative;margin:0;font-size:20px;line-height:1.3;color:#626970;flex:none"><b>Space</b> play / pause &#160;·&#160; <b>Enter</b> one run &#160;·&#160; <b>A</b> keep playing &#160;·&#160; <b>Q</b> +100 runs &#160;·&#160; <b>R</b> reset &#160;·&#160; <b>F</b> full screen &#160;·&#160; the sliders change the number of toads and tricky toads</p>
 </section>
 
 </div></div>
@@ -528,9 +530,9 @@ function count(line) {
   anim(ct, [{ transform: 'scale(1.4)', color: '#FFFFFF' }, { transform: 'scale(1)' }], { duration: 320, easing: 'ease-out', fill: 'none' });
 }
 function summary(steps, asks, state) {
-  const a = `<b>${asks} ${asks === 1 ? 'ask' : 'asks'}</b>`;
-  runSum.innerHTML = state === 'idle' ? 'This run: press Play to start'
-    : `This run: shuffle <b>${steps} steps</b> + ${a}` + (state === 'done' ? ` = <b>${steps + asks} steps</b>` : '');
+  const a = `<b>${asks}</b> ${asks === 1 ? 'ask' : 'asks'}`;
+  runSum.innerHTML = state === 'idle' ? 'Running time of a run = n shuffle steps + asks'
+    : `Running time: <b>${steps}</b> shuffle steps + ${a}` + (state === 'done' ? ` = <b>${steps + asks} steps</b>` : '');
 }
 
 /* a quick sweep over the toads in slots i..j-1 (all tricky): each turns purple and is counted on the for / ask / if lines */
@@ -617,7 +619,7 @@ async function playOne() {
       await wait(D(1100), tok);
       if (S.auto && tok === S.token) { playOne(); return; }
     }
-    if (Number.isFinite(asks)) say(`done in ${asks} ${asks === 1 ? 'question' : 'questions'}. press Play for another run.`);
+    if (Number.isFinite(asks)) say(`done in ${asks} ${asks === 1 ? 'ask' : 'asks'}. press Play for another run.`);
   } catch (e) {
     if (e !== ABORT) console.error(e);
   } finally {
@@ -644,7 +646,7 @@ function quickRuns(count) {
     else {
       S.batch = Math.max(0, S.batch - 1); buttons();
       const avg = stats.sum / stats.n;
-      say(S.dice === 'bad' ? `${stats.n} runs so far. every run needs ${S.t + 1} asks.`
+      say(S.dice === 'bad' ? `${stats.n} runs so far. every run needs n - t + 1 = ${S.t + 1} asks.`
         : avg < theoryMean() ? `${stats.n} runs so far. the blue average stays under the gold bound.`
         : `${stats.n} runs so far. the average stays near the gold bound.`);
     }
@@ -656,8 +658,30 @@ function quickRuns(count) {
 const stats = { n: 0, sum: 0, dnf: 0, max: 0, counts: [] };
 // random order: our solution's bound, at most 1/p asks on average (p = share of trustworthy toads); worst order: tricky + 1
 function theoryMean() { return S.dice === 'fair' ? S.n / (S.n - S.t) : S.t + 1; }
-const refWord = () => S.dice === 'fair' ? 'bound' : 'worst';
-function theoryLegend() { return S.dice === 'fair' ? 'bound 1/p, p = share of trustworthy toads' : 'worst order: tricky + 1 asks'; }
+// t, as in our solution, is the number of trustworthy toads (S.t counts the tricky ones, so t = n - S.t and p = t/n)
+const trusty = () => S.n - S.t;
+const slideRef = (document.getElementById('s-sim') || { dataset: {} }).dataset;   // the deck slide says where each bound is proved
+const fmtBound = E => S.dice === 'fair' ? E.toFixed(2) : String(E);
+function boundLabel() { return S.dice === 'fair' ? 'bound 1/p = ' + fmtBound(theoryMean()) : 'bound n−t+1 = ' + fmtBound(theoryMean()); }
+function theoryLegend() {
+  return S.dice === 'fair'
+    ? 'bound 1/p = n/t: the average stays under it' + (slideRef.refExp ? ` (slide ${slideRef.refExp})` : '')
+    : 'bound n − t + 1: every worst-order run needs it' + (slideRef.refWorst ? ` (slide ${slideRef.refWorst})` : '');
+}
+function histNote() {
+  return S.dice === 'fair'
+    ? `1 ask: chance p = ${trusty()}/${S.n} ≈ ${Math.round(100 * trusty() / S.n)}%, and longer runs get rarer fast`
+    : `worst order: every run needs n − t + 1 = ${S.t + 1} asks`;
+}
+function axisTitles(ctx, m, pw, ph, xTitle, yTitle) {
+  ctx.save();
+  ctx.font = "600 15px Lexend, 'JetBrains Mono', sans-serif"; ctx.fillStyle = C('--ink');
+  ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+  ctx.fillText(xTitle, m.l + pw / 2, m.t + ph + m.b - 1);
+  ctx.translate(13, m.t + ph / 2); ctx.rotate(-Math.PI / 2); ctx.textBaseline = 'middle';
+  ctx.fillText(yTitle, 0, 0);
+  ctx.restore();
+}
 function resetStats() { stats.n = 0; stats.sum = 0; stats.dnf = 0; stats.max = 0; stats.counts = []; chartA.reset(); chartB.reset(); readouts(); invalidate(); }
 function addRun(asks) {
   stats.n++;
@@ -668,10 +692,11 @@ function addRun(asks) {
 }
 function readouts() {
   const E = theoryMean(), a = stats.dnf ? Infinity : (stats.n ? stats.sum / stats.n : NaN);
-  $('#simRoA').innerHTML = `<b>${stats.n}</b> ${stats.n === 1 ? 'run' : 'runs'} · average <b>${stats.n ? a.toFixed(2) : '–'}</b> · ${refWord()} <b>${E.toFixed(2)}</b>`;
+  $('#simRoA').innerHTML = `<b>${stats.n}</b> ${stats.n === 1 ? 'run' : 'runs'} · average <b>${stats.n ? a.toFixed(2) : '–'}</b> · bound <b>${fmtBound(E)}</b>`;
   const worst = `${S.t + 1}`;
-  $('#simRoB').innerHTML = `most so far <b>${stats.max || (stats.dnf ? '∞' : '–')}</b> · worst <b>${worst}</b>`;
+  $('#simRoB').innerHTML = `most so far <b>${stats.max || (stats.dnf ? '∞' : '–')}</b> · worst-case bound <b>${worst}</b>`;
   const tl = document.getElementById('simTheoryLegend'); if (tl) tl.textContent = theoryLegend();
+  const hn = document.getElementById('simHistNote'); if (hn) hn.textContent = histNote();
 }
 
 /* charts */
@@ -697,7 +722,7 @@ class ConvChart extends Chart {
   }
   draw(dt, now) {
     const ctx = this.begin(), W = this.W, H = this.H;
-    const m = { l: 44, r: 150, t: 10, b: 26 }, pw = W - m.l - m.r, ph = H - m.t - m.b;
+    const m = { l: 66, r: 172, t: 10, b: 50 }, pw = W - m.l - m.r, ph = H - m.t - m.b;
     const N = this.vals.length;
     const tlx = Math.max(1, Math.ceil(Math.log10(Math.max(10, N))));
     const E = theoryMean();
@@ -723,13 +748,14 @@ class ConvChart extends Chart {
       for (let j = 2; j < 10; j++) { const xm = X(base * j); if (xm > m.l + pw) break; ctx.beginPath(); ctx.moveTo(xm, m.t + ph - 6); ctx.lineTo(xm, m.t + ph); ctx.stroke(); }
     }
     ctx.strokeStyle = C('--ink'); ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(m.l, m.t); ctx.lineTo(m.l, m.t + ph); ctx.lineTo(m.l + pw, m.t + ph); ctx.stroke();
+    axisTitles(ctx, m, pw, ph, 'run number (log scale: 1, 10, 100, …)', 'asks in the run');
     ctx.font = "600 16px Lexend, 'JetBrains Mono', sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     let ey = null;
     if (Number.isFinite(E)) {
       ey = Y(E);
       ctx.setLineDash([10, 8]); ctx.strokeStyle = C('--gold'); ctx.lineWidth = 4;
       ctx.beginPath(); ctx.moveTo(m.l, ey); ctx.lineTo(m.l + pw, ey); ctx.stroke(); ctx.setLineDash([]);
-      ctx.fillStyle = '#8A6A00'; ctx.fillText(refWord() + ' ' + E.toFixed(2), m.l + pw + 10, ey);
+      ctx.fillStyle = '#8A6A00'; ctx.fillText(boundLabel(), m.l + pw + 10, ey);
     } else { ctx.fillStyle = C('--red'); ctx.fillText('theory: ∞', m.l + pw + 10, Y(this.ym) + 8); }
     if (!N) {
       const hx = m.l + pw / 2, hy = (ey !== null && ey < m.t + ph * 0.5) ? m.t + ph * 0.68 : m.t + ph * 0.28;
@@ -779,7 +805,7 @@ class HistChart extends Chart {
   reset() { this.disp = []; this.ymax = 1; }
   draw(dt) {
     const ctx = this.begin(), W = this.W, H = this.H;
-    const m = { l: 54, r: 14, t: 18, b: 26 }, pw = W - m.l - m.r, ph = H - m.t - m.b;
+    const m = { l: 72, r: 14, t: 18, b: 50 }, pw = W - m.l - m.r, ph = H - m.t - m.b;
     const N = stats.n;
     const KK = S.t + 1, K = KK > 8 ? 7 : KK;          // more than 8 possible answers: 1 .. 6 asks and a '7+ asks' bucket
     const targets = [];
@@ -802,6 +828,7 @@ class HistChart extends Chart {
     const Y = v => m.t + ph - (v / this.ymax) * ph;
     ctx.font = "16px Lexend, 'JetBrains Mono', sans-serif"; ctx.fillStyle = C('--muted'); ctx.strokeStyle = C('--rule'); ctx.lineWidth = 1;
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    axisTitles(ctx, m, pw, ph, 'asks the run needed', 'share of runs');
     for (let v = 0; v <= this.ymax + 0.001; v += 0.25) { const y = Y(v); ctx.beginPath(); ctx.moveTo(m.l, y); ctx.lineTo(m.l + pw, y); ctx.stroke(); ctx.fillText(Math.round(v * 100) + '%', m.l - 8, y); }
     const slot = pw / K, bw = Math.min(96, slot * 0.6);
     for (let i = 0; i < K; i++) {
@@ -876,6 +903,7 @@ function syncSliders() {
   const rT = $('#simT'); rT.max = tmax; if (S.t > tmax) S.t = tmax; rT.value = S.t;
   $('#simN').value = Math.max(0, NS.indexOf(S.n)); $('#simN').setAttribute('aria-valuetext', S.n + ' toads');
   $('#simVN').textContent = S.n; $('#simVT').textContent = S.t;
+  const pv = document.getElementById('simPVal'); if (pv) pv.innerHTML = `p = t/n =<b>${S.n - S.t}/${S.n}</b>`;
   $('#simPopH').style.width = ((S.n - S.t) / S.n * 100) + '%'; $('#simPopT').style.width = (S.t / S.n * 100) + '%';
   invalidate();
 }
@@ -893,7 +921,7 @@ $('#simQuick').addEventListener('click', () => quickRuns(100));
 $('#simReset').addEventListener('click', () => { newInput(); freshSetup('fresh start. press Play to watch one run.'); });
 document.getElementById('s-sim').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setTimeout(() => b.blur(), 0); });
 // one legend slot shows the theory formula for the current settings
-(() => { const lg = document.querySelector('#simChartA .legend'); const sp = document.createElement('span'); sp.id = 'simTheoryLegend'; lg.appendChild(sp); })();
+(() => { if (document.getElementById('simTheoryLegend')) return; const lg = document.querySelector('#simChartA .legend'); const sp = document.createElement('span'); sp.id = 'simTheoryLegend'; lg.appendChild(sp); })();
 
 function onKey(e) {
   if (e.code === 'Space') { if (S.running) setPaused(!S.paused); else playOne(); return true; }
