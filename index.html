@@ -62,6 +62,7 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body)
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
 .sgrp{display:flex;align-items:center;gap:12px}
 .sgrp .lab b{font:400 28px/1 var(--f-display);color:var(--blue);letter-spacing:0;margin-left:8px;display:inline-block;min-width:30px}
+#simVN{min-width:64px} #simVT{min-width:48px}
 .sim input[type=range]{width:150px;accent-color:var(--blue);margin:0}
 .pop{width:110px;height:20px;display:flex;border:2px solid var(--ink);border-radius:10px;overflow:hidden;flex:none}
 .pop i{display:block;height:100%;transition:width .45s cubic-bezier(.3,.7,.2,1)}
@@ -89,6 +90,20 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body)
 .faces .badge{position:absolute;right:-4%;top:-4%;width:44%;height:44%;opacity:0;transform:scale(0)}
 .toad.win .faces{filter:drop-shadow(0 0 9px rgba(245,197,66,.95)) drop-shadow(0 0 22px rgba(245,197,66,.65))}
 .tag{font:600 18px/1.2 var(--f-body);text-align:center;color:var(--muted);margin-top:3px;white-space:nowrap}
+/* more than 20 toads: each toad is a small cell in the stickers' colours; a ring marks the toad being checked */
+.toad.cell .faces{width:100%;height:100%;border-radius:24%;background:#D6D0C4;box-shadow:inset 0 0 0 1px rgba(36,30,27,.38);transform-origin:50% 50%;transition:background-color .25s,box-shadow .25s}
+.toad.cell .faces[data-k="tricky"]{background:var(--purple-f);box-shadow:inset 0 0 0 1px #6A44B8}
+.toad.cell .faces[data-k="honest"]{background:var(--green-f);box-shadow:inset 0 0 0 1px #2F7A2B}
+.toad.cell .faces[data-k="sleep"]{background:#ECE7DD;box-shadow:inset 0 0 0 1px rgba(36,30,27,.14)}
+.toad.cell.win .faces{filter:none;box-shadow:inset 0 0 0 1px #2F7A2B,0 0 0 3px var(--gold),0 0 14px 4px rgba(245,197,66,.85)}
+#simRing{position:absolute;left:0;top:0;border:3px solid var(--blue);border-radius:30%;opacity:0;pointer-events:none;z-index:4}
+#simRing.found{border-color:var(--gold);box-shadow:0 0 0 2px rgba(36,30,27,.3),0 0 14px 3px rgba(245,197,66,.9)}
+#simCellKey{position:absolute;left:32px;top:230px;display:none;gap:22px;align-items:center;font:400 16px/1 var(--f-body);color:var(--muted);white-space:nowrap}
+#simCellKey span{display:flex;align-items:center;gap:7px}
+#simCellKey i{display:inline-block;width:14px;height:14px;border-radius:4px;box-sizing:border-box}
+.bigline #simCellKey{display:flex}
+.qtrack{position:relative;flex:1;height:20px;border-radius:10px;background:var(--panel);border:2px solid var(--rule);overflow:hidden}
+.qfill{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--sky);transition:width .25s}
 #simNarr .num{font-family:var(--f-body);font-weight:600;font-size:.82em}
 #simNarr{position:absolute;left:32px;top:256px;width:916px;margin:0;font:700 30px/1.1 var(--f-hand);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #simMeters{position:absolute;left:32px;top:302px;width:916px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
@@ -162,7 +177,7 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body)
 <div style="position:relative;display:flex;flex-direction:row;align-items:center;gap:24px;border-bottom:3px solid #241E1B;padding:0px 0px 14px 0px;flex:none"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDAgMjQwIiB3aWR0aD0iMjQwIiBoZWlnaHQ9IjI0MCI+PGcgZmlsbD0iIzNBMkYyQiIgc3Ryb2tlPSIjM0EyRjJCIiBzdHJva2Utd2lkdGg9IjE0IiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48ZWxsaXBzZSBjeD0iMTAwIiBjeT0iMjI2IiByeD0iMTUiIHJ5PSI4Ii8+PGVsbGlwc2UgY3g9IjE0MCIgY3k9IjIyNiIgcng9IjE1IiByeT0iOCIvPjxwYXRoIGQ9Ik02MCAxMDQgUTUwIDcwIDU4IDQ0IFE4NCA2MiA5OCA4MCBaIi8+PHBhdGggZD0iTTE4MCAxMDQgUTE5MCA3MCAxODIgNDQgUTE1NiA2MiAxNDIgODAgWiIvPjxwYXRoIGQ9Ik0xMjAgNTggQzE2OCA1OCAxOTQgOTggMTk0IDE0OCBDMTk0IDE5NiAxNjIgMjI2IDEyMCAyMjYgQzc4IDIyNiA0NiAxOTYgNDYgMTQ4IEM0NiA5OCA3MiA1OCAxMjAgNTggWiIvPjxwYXRoIGQ9Ik04NCA3NiBRMTIwIDU4IDE1NiA3NiBMMTU2IDkyIFExMjAgODAgODQgOTIgWiIvPjxwYXRoIGQ9Ik0xMjAgMzQgTDE5MCA1OCBMMTIwIDgyIEw1MCA1OCBaIi8+PC9nPjxlbGxpcHNlIGN4PSIxMDAiIGN5PSIyMjYiIHJ4PSIxNSIgcnk9IjgiIGZpbGw9IiNFM0EyM0MiLz48ZWxsaXBzZSBjeD0iMTQwIiBjeT0iMjI2IiByeD0iMTUiIHJ5PSI4IiBmaWxsPSIjRTNBMjNDIi8+PHBhdGggZD0iTTYwIDEwNCBRNTAgNzAgNTggNDQgUTg0IDYyIDk4IDgwIFoiIGZpbGw9IiM4QjZCNEUiLz48cGF0aCBkPSJNMTgwIDEwNCBRMTkwIDcwIDE4MiA0NCBRMTU2IDYyIDE0MiA4MCBaIiBmaWxsPSIjOEI2QjRFIi8+PHBhdGggZD0iTTEyMCA1OCBDMTY4IDU4IDE5NCA5OCAxOTQgMTQ4IEMxOTQgMTk2IDE2MiAyMjYgMTIwIDIyNiBDNzggMjI2IDQ2IDE5NiA0NiAxNDggQzQ2IDk4IDcyIDU4IDEyMCA1OCBaIiBmaWxsPSIjQTg4NTYzIi8+PHBhdGggZD0iTTUyIDEyOCBRNDAgMTcwIDY2IDIxMCBRODQgMTg2IDc4IDE0NiBRNzAgMTI0IDUyIDEyOCBaIiBmaWxsPSIjOEI2QjRFIi8+PHBhdGggZD0iTTE4OCAxMjggUTIwMCAxNzAgMTc0IDIxMCBRMTU2IDE4NiAxNjIgMTQ2IFExNzAgMTI0IDE4OCAxMjggWiIgZmlsbD0iIzhCNkI0RSIvPjxwYXRoIGQ9Ik01OCAxNjAgUTY0IDE3NiA3MCAxODggTTU2IDE3NiBRNjIgMTkwIDY2IDE5OCBNMTgyIDE2MCBRMTc2IDE3NiAxNzAgMTg4IE0xODQgMTc2IFExNzggMTkwIDE3NCAxOTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzdDNUU0NCIgc3Ryb2tlLXdpZHRoPSIzLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0xMjAgMTQwIEMxNTIgMTQwIDE2NiAxNjYgMTYyIDE5MiBDMTU4IDIxNCAxNDAgMjIyIDEyMCAyMjIgQzEwMCAyMjIgODIgMjE0IDc4IDE5MiBDNzQgMTY2IDg4IDE0MCAxMjAgMTQwIFoiIGZpbGw9IiNFRkUzQ0YiLz48cGF0aCBkPSJNOTkgMTYzIEwxMDQgMTY5IEwxMDkgMTYzIE0xMTUgMTU5IEwxMjAgMTY1IEwxMjUgMTU5IE0xMzEgMTYzIEwxMzYgMTY5IEwxNDEgMTYzIE05MSAxODEgTDk2IDE4NyBMMTAxIDE4MSBNMTA3IDE3OSBMMTEyIDE4NSBMMTE3IDE3OSBNMTIzIDE3OSBMMTI4IDE4NSBMMTMzIDE3OSBNMTM5IDE4MSBMMTQ0IDE4NyBMMTQ5IDE4MSBNMTAxIDE5NyBMMTA2IDIwMyBMMTExIDE5NyBNMTE1IDE5NSBMMTIwIDIwMSBMMTI1IDE5NSBNMTI5IDE5NyBMMTM0IDIwMyBMMTM5IDE5NyAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0I5OTg3OCIgc3Ryb2tlLXdpZHRoPSIzLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxjaXJjbGUgY3g9Ijk0IiBjeT0iMTIwIiByPSIzMyIgZmlsbD0iI0YzRThENiIvPjxjaXJjbGUgY3g9IjE0NiIgY3k9IjEyMCIgcj0iMzMiIGZpbGw9IiNGM0U4RDYiLz48cGF0aCBkPSJNMTAwIDkyIFExMjAgMTA0IDE0MCA5MiIgZmlsbD0iI0YzRThENiIvPjxwYXRoIGQ9Ik05NCAxMjAgbS0yOCAwIGEyOCAyOCAwIDAgMSA1NiAwIiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTEwNCA5NCBRMTIwIDg0IDEzNiA5NCBMMTM2IDEzMCBMMTA0IDEzMCBaIiBmaWxsPSIjRjNFOEQ2Ii8+PGNpcmNsZSBjeD0iOTQiIGN5PSIxMjAiIHI9IjE2IiBmaWxsPSIjRjJCNTNBIiBzdHJva2U9IiMzQTJGMkIiIHN0cm9rZS13aWR0aD0iMy41Ii8+PGNpcmNsZSBjeD0iOTQiIGN5PSIxMjIiIHI9IjkiIGZpbGw9IiMzQTJGMkIiLz48Y2lyY2xlIGN4PSI5OCIgY3k9IjExNyIgcj0iMy41IiBmaWxsPSIjRkZGRkZGIi8+PHBhdGggZD0iTTc1IDExNiBROTQgOTggMTEzIDExNiBMMTEzIDEwOCBROTQgOTIgNzUgMTA4IFoiIGZpbGw9IiNGM0U4RDYiLz48cGF0aCBkPSJNNzYgMTE1IFE5NCAxMDEgMTEyIDExNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjM0EyRjJCIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxjaXJjbGUgY3g9IjE0NiIgY3k9IjEyMCIgcj0iMTYiIGZpbGw9IiNGMkI1M0EiIHN0cm9rZT0iIzNBMkYyQiIgc3Ryb2tlLXdpZHRoPSIzLjUiLz48Y2lyY2xlIGN4PSIxNDYiIGN5PSIxMjIiIHI9IjkiIGZpbGw9IiMzQTJGMkIiLz48Y2lyY2xlIGN4PSIxNTAiIGN5PSIxMTciIHI9IjMuNSIgZmlsbD0iI0ZGRkZGRiIvPjxwYXRoIGQ9Ik0xMjcgMTE2IFExNDYgOTggMTY1IDExNiBMMTY1IDEwOCBRMTQ2IDkyIDEyNyAxMDggWiIgZmlsbD0iI0YzRThENiIvPjxwYXRoIGQ9Ik0xMjggMTE1IFExNDYgMTAxIDE2NCAxMTUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzNBMkYyQiIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48Y2lyY2xlIGN4PSI5NCIgY3k9IjEyMCIgcj0iMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzNBMkYyQiIgc3Ryb2tlLXdpZHRoPSI0LjUiLz48Y2lyY2xlIGN4PSIxNDYiIGN5PSIxMjAiIHI9IjI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMzQTJGMkIiIHN0cm9rZS13aWR0aD0iNC41Ii8+PHBhdGggZD0iTTExNyAxMTYgUTEyMCAxMTIgMTIzIDExNiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjM0EyRjJCIiBzdHJva2Utd2lkdGg9IjQuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHBhdGggZD0iTTExMiAxMzIgUTEyMCAxMjcgMTI4IDEzMiBRMTI2IDE0NiAxMjAgMTUyIFExMTQgMTQ2IDExMiAxMzIgWiIgZmlsbD0iI0UzQTIzQyIgc3Ryb2tlPSIjM0EyRjJCIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBkPSJNODQgNzYgUTEyMCA1OCAxNTYgNzYgTDE1NiA5MiBRMTIwIDgwIDg0IDkyIFoiIGZpbGw9IiMyMjMwM0YiLz48cGF0aCBkPSJNMTIwIDM0IEwxOTAgNTggTDEyMCA4MiBMNTAgNTggWiIgZmlsbD0iIzJFM0Y1NyIvPjxwYXRoIGQ9Ik0xMjAgMzQgTDE5MCA1OCBMMTIwIDgyIEw1MCA1OCBaIiBmaWxsPSJub25lIiBzdHJva2U9IiMzQTJGMkIiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxjaXJjbGUgY3g9IjEyMCIgY3k9IjU4IiByPSI1IiBmaWxsPSIjRThCODNBIiBzdHJva2U9IiMzQTJGMkIiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik0xMjAgNTggUTE1NiA2MiAxNzggNjggTDE4MCA5MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjM0EyRjJCIiBzdHJva2Utd2lkdGg9IjciIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwYXRoIGQ9Ik0xMjAgNTggUTE1NiA2MiAxNzggNjggTDE4MCA5MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRThCODNBIiBzdHJva2Utd2lkdGg9IjMuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBhdGggZD0iTTE3NCA5MCBMMTg2IDkwIEwxODQgMTA0IEwxNzYgMTA0IFoiIGZpbGw9IiNFOEI4M0EiIHN0cm9rZT0iIzNBMkYyQiIgc3Ryb2tlLXdpZHRoPSIzLjUiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4NCg==" alt="" style="width:78px;height:78px;flex:none"><div style="display:flex;flex-direction:column;gap:4px"><p style="margin:0;font-size:20px;font-weight:600;line-height:1.2;color:#165D9C;letter-spacing:1px">CSE301 · Homework 2 · Problem 3 · Algorithm 3</p><h1 style="margin:0;font-family:'Jua', 'Lexend', 'JetBrains Mono', sans-serif;font-size:56px;font-weight:400;line-height:1.05;color:#241E1B">Shuffle the toads, then ask in order</h1></div><p style="margin:0 0 0 auto;font-size:22px;line-height:1.4;color:#626970;text-align:right">n toads, strictly more than n/2 of them trustworthy.<br>The expert checks one toad in Θ(1) time.</p></div>
 <div id="simControls" class="scard" aria-label="Settings">
   <div class="seg" id="simDice" role="group" aria-label="The order"><button data-v="fair" aria-pressed="true">Random order</button><button data-v="bad" aria-pressed="false">Worst order</button></div>
-  <div class="sgrp"><label class="lab" for="simN">Toads<b id="simVN">7</b></label><input id="simN" type="range" min="5" max="14" step="1" value="7"></div>
+  <div class="sgrp"><label class="lab" for="simN">Toads<b id="simVN">7</b></label><input id="simN" type="range" min="0" max="27" step="1" value="2" aria-valuetext="7 toads"></div>
   <div class="sgrp"><label class="lab" for="simT">Tricky<b id="simVT">3</b></label><input id="simT" type="range" min="0" max="3" step="1" value="3"><div class="pop" title="trustworthy vs tricky"><i id="simPopH"></i><i id="simPopT"></i></div></div>
   <div class="seg" id="simSpeed" role="group" aria-label="Speed"><button data-v="slow" aria-pressed="false">Slow</button><button data-v="normal" aria-pressed="true">Normal</button><button data-v="fast" aria-pressed="false">Fast</button></div>
 </div>
@@ -178,6 +193,7 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body)
     </div>
     <div id="simOwl"><img alt="the toad expert" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDAgMjQwIiB3aWR0aD0iMjQwIiBoZWlnaHQ9IjI0MCI+PGcgZmlsbD0iIzNBMkYyQiIgc3Ryb2tlPSIjM0EyRjJCIiBzdHJva2Utd2lkdGg9IjE0IiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48ZWxsaXBzZSBjeD0iMTAwIiBjeT0iMjI2IiByeD0iMTUiIHJ5PSI4Ii8+PGVsbGlwc2UgY3g9IjE0MCIgY3k9IjIyNiIgcng9IjE1IiByeT0iOCIvPjxwYXRoIGQ9Ik02MCAxMDQgUTUwIDcwIDU4IDQ0IFE4NCA2MiA5OCA4MCBaIi8+PHBhdGggZD0iTTE4MCAxMDQgUTE5MCA3MCAxODIgNDQgUTE1NiA2MiAxNDIgODAgWiIvPjxwYXRoIGQ9Ik0xMjAgNTggQzE2OCA1OCAxOTQgOTggMTk0IDE0OCBDMTk0IDE5NiAxNjIgMjI2IDEyMCAyMjYgQzc4IDIyNiA0NiAxOTYgNDYgMTQ4IEM0NiA5OCA3MiA1OCAxMjAgNTggWiIvPjxwYXRoIGQ9Ik04NCA3NiBRMTIwIDU4IDE1NiA3NiBMMTU2IDkyIFExMjAgODAgODQgOTIgWiIvPjxwYXRoIGQ9Ik0xMjAgMzQgTDE5MCA1OCBMMTIwIDgyIEw1MCA1OCBaIi8+PC9nPjxlbGxpcHNlIGN4PSIxMDAiIGN5PSIyMjYiIHJ4PSIxNSIgcnk9IjgiIGZpbGw9IiNFM0EyM0MiLz48ZWxsaXBzZSBjeD0iMTQwIiBjeT0iMjI2IiByeD0iMTUiIHJ5PSI4IiBmaWxsPSIjRTNBMjNDIi8+PHBhdGggZD0iTTYwIDEwNCBRNTAgNzAgNTggNDQgUTg0IDYyIDk4IDgwIFoiIGZpbGw9IiM4QjZCNEUiLz48cGF0aCBkPSJNMTgwIDEwNCBRMTkwIDcwIDE4MiA0NCBRMTU2IDYyIDE0MiA4MCBaIiBmaWxsPSIjOEI2QjRFIi8+PHBhdGggZD0iTTEyMCA1OCBDMTY4IDU4IDE5NCA5OCAxOTQgMTQ4IEMxOTQgMTk2IDE2MiAyMjYgMTIwIDIyNiBDNzggMjI2IDQ2IDE5NiA0NiAxNDggQzQ2IDk4IDcyIDU4IDEyMCA1OCBaIiBmaWxsPSIjQTg4NTYzIi8+PHBhdGggZD0iTTUyIDEyOCBRNDAgMTcwIDY2IDIxMCBRODQgMTg2IDc4IDE0NiBRNzAgMTI0IDUyIDEyOCBaIiBmaWxsPSIjOEI2QjRFIi8+PHBhdGggZD0iTTE4OCAxMjggUTIwMCAxNzAgMTc0IDIxMCBRMTU2IDE4NiAxNjIgMTQ2IFExNzAgMTI0IDE4OCAxMjggWiIgZmlsbD0iIzhCNkI0RSIvPjxwYXRoIGQ9Ik01OCAxNjAgUTY0IDE3NiA3MCAxODggTTU2IDE3NiBRNjIgMTkwIDY2IDE5OCBNMTgyIDE2MCBRMTc2IDE3NiAxNzAgMTg4IE0xODQgMTc2IFExNzggMTkwIDE3NCAxOTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzdDNUU0NCIgc3Ryb2tlLXdpZHRoPSIzLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0xMjAgMTQwIEMxNTIgMTQwIDE2NiAxNjYgMTYyIDE5MiBDMTU4IDIxNCAxNDAgMjIyIDEyMCAyMjIgQzEwMCAyMjIgODIgMjE0IDc4IDE5MiBDNzQgMTY2IDg4IDE0MCAxMjAgMTQwIFoiIGZpbGw9IiNFRkUzQ0YiLz48cGF0aCBkPSJNOTkgMTYzIEwxMDQgMTY5IEwxMDkgMTYzIE0xMTUgMTU5IEwxMjAgMTY1IEwxMjUgMTU5IE0xMzEgMTYzIEwxMzYgMTY5IEwxNDEgMTYzIE05MSAxODEgTDk2IDE4NyBMMTAxIDE4MSBNMTA3IDE3OSBMMTEyIDE4NSBMMTE3IDE3OSBNMTIzIDE3OSBMMTI4IDE4NSBMMTMzIDE3OSBNMTM5IDE4MSBMMTQ0IDE4NyBMMTQ5IDE4MSBNMTAxIDE5NyBMMTA2IDIwMyBMMTExIDE5NyBNMTE1IDE5NSBMMTIwIDIwMSBMMTI1IDE5NSBNMTI5IDE5NyBMMTM0IDIwMyBMMTM5IDE5NyAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0I5OTg3OCIgc3Ryb2tlLXdpZHRoPSIzLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxjaXJjbGUgY3g9Ijk0IiBjeT0iMTIwIiByPSIzMyIgZmlsbD0iI0YzRThENiIvPjxjaXJjbGUgY3g9IjE0NiIgY3k9IjEyMCIgcj0iMzMiIGZpbGw9IiNGM0U4RDYiLz48cGF0aCBkPSJNMTAwIDkyIFExMjAgMTA0IDE0MCA5MiIgZmlsbD0iI0YzRThENiIvPjxwYXRoIGQ9Ik05NCAxMjAgbS0yOCAwIGEyOCAyOCAwIDAgMSA1NiAwIiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTEwNCA5NCBRMTIwIDg0IDEzNiA5NCBMMTM2IDEzMCBMMTA0IDEzMCBaIiBmaWxsPSIjRjNFOEQ2Ii8+PGNpcmNsZSBjeD0iOTQiIGN5PSIxMjAiIHI9IjE2IiBmaWxsPSIjRjJCNTNBIiBzdHJva2U9IiMzQTJGMkIiIHN0cm9rZS13aWR0aD0iMy41Ii8+PGNpcmNsZSBjeD0iOTQiIGN5PSIxMjIiIHI9IjkiIGZpbGw9IiMzQTJGMkIiLz48Y2lyY2xlIGN4PSI5OCIgY3k9IjExNyIgcj0iMy41IiBmaWxsPSIjRkZGRkZGIi8+PHBhdGggZD0iTTc1IDExNiBROTQgOTggMTEzIDExNiBMMTEzIDEwOCBROTQgOTIgNzUgMTA4IFoiIGZpbGw9IiNGM0U4RDYiLz48cGF0aCBkPSJNNzYgMTE1IFE5NCAxMDEgMTEyIDExNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjM0EyRjJCIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxjaXJjbGUgY3g9IjE0NiIgY3k9IjEyMCIgcj0iMTYiIGZpbGw9IiNGMkI1M0EiIHN0cm9rZT0iIzNBMkYyQiIgc3Ryb2tlLXdpZHRoPSIzLjUiLz48Y2lyY2xlIGN4PSIxNDYiIGN5PSIxMjIiIHI9IjkiIGZpbGw9IiMzQTJGMkIiLz48Y2lyY2xlIGN4PSIxNTAiIGN5PSIxMTciIHI9IjMuNSIgZmlsbD0iI0ZGRkZGRiIvPjxwYXRoIGQ9Ik0xMjcgMTE2IFExNDYgOTggMTY1IDExNiBMMTY1IDEwOCBRMTQ2IDkyIDEyNyAxMDggWiIgZmlsbD0iI0YzRThENiIvPjxwYXRoIGQ9Ik0xMjggMTE1IFExNDYgMTAxIDE2NCAxMTUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzNBMkYyQiIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48Y2lyY2xlIGN4PSI5NCIgY3k9IjEyMCIgcj0iMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzNBMkYyQiIgc3Ryb2tlLXdpZHRoPSI0LjUiLz48Y2lyY2xlIGN4PSIxNDYiIGN5PSIxMjAiIHI9IjI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMzQTJGMkIiIHN0cm9rZS13aWR0aD0iNC41Ii8+PHBhdGggZD0iTTExNyAxMTYgUTEyMCAxMTIgMTIzIDExNiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjM0EyRjJCIiBzdHJva2Utd2lkdGg9IjQuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHBhdGggZD0iTTExMiAxMzIgUTEyMCAxMjcgMTI4IDEzMiBRMTI2IDE0NiAxMjAgMTUyIFExMTQgMTQ2IDExMiAxMzIgWiIgZmlsbD0iI0UzQTIzQyIgc3Ryb2tlPSIjM0EyRjJCIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBkPSJNODQgNzYgUTEyMCA1OCAxNTYgNzYgTDE1NiA5MiBRMTIwIDgwIDg0IDkyIFoiIGZpbGw9IiMyMjMwM0YiLz48cGF0aCBkPSJNMTIwIDM0IEwxOTAgNTggTDEyMCA4MiBMNTAgNTggWiIgZmlsbD0iIzJFM0Y1NyIvPjxwYXRoIGQ9Ik0xMjAgMzQgTDE5MCA1OCBMMTIwIDgyIEw1MCA1OCBaIiBmaWxsPSJub25lIiBzdHJva2U9IiMzQTJGMkIiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxjaXJjbGUgY3g9IjEyMCIgY3k9IjU4IiByPSI1IiBmaWxsPSIjRThCODNBIiBzdHJva2U9IiMzQTJGMkIiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik0xMjAgNTggUTE1NiA2MiAxNzggNjggTDE4MCA5MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjM0EyRjJCIiBzdHJva2Utd2lkdGg9IjciIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwYXRoIGQ9Ik0xMjAgNTggUTE1NiA2MiAxNzggNjggTDE4MCA5MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRThCODNBIiBzdHJva2Utd2lkdGg9IjMuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBhdGggZD0iTTE3NCA5MCBMMTg2IDkwIEwxODQgMTA0IEwxNzYgMTA0IFoiIGZpbGw9IiNFOEI4M0EiIHN0cm9rZT0iIzNBMkYyQiIgc3Ryb2tlLXdpZHRoPSIzLjUiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4NCg=="></div>
     <div id="simLine"></div>
+    <div id="simCellKey" aria-hidden="true"><span><i style="background:var(--purple-f);border:1px solid #6A44B8"></i>tricky</span><span><i style="background:var(--green-f);border:1px solid #2F7A2B"></i>trustworthy</span><span><i style="background:#D6D0C4;border:1px solid rgba(36,30,27,.38)"></i>not asked yet</span><span><i style="border:3px solid var(--blue)"></i>being asked</span><span><i style="border:3px solid var(--gold);box-shadow:0 0 6px 1px rgba(245,197,66,.9)"></i>returned</span></div>
     <p id="simNarr" aria-live="polite"></p>
     <div id="simMeters">
       <div class="meter"><span class="lab">Shuffle</span><div class="track"><div id="simShufFill"></div></div><span class="mval" id="simShufVal">0 steps</span></div>
@@ -226,6 +242,9 @@ const now = () => CLOCK.virtual ? CLOCK.t : performance.now();
 const vFrames = [], vAnims = new Set();
 const raf = cb => { if (CLOCK.virtual) vFrames.push(cb); else requestAnimationFrame(cb); };
 const LINE_W = 916, TOAD_MAX = 84, OWL = 80;
+const NS = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 25, 30, 40, 50, 75, 100, 150, 200, 300, 500, 750, 1000];  // the Toads slider's stops
+const BIG = 20, GRID_H = 86;        // above 20 toads the line is a grid of small cells, GRID_H tall (the colour key sits under it)
+const big = () => S.n > BIG;
 
 // A finished animation that fills forwards must stay referenced: once nothing points at it, Chrome can collect it out of
 // getAnimations() while its end values stay on screen, and then no reset can find it to cancel (a full shuffle bar after Reset).
@@ -267,13 +286,39 @@ function shuffled(arr) { const a = arr.slice(); for (let i = a.length - 1; i > 0
 /* the line of toads */
 const lineEl = $('#simLine'), owlEl = $('#simOwl'), owlImg = $('#simOwl img');
 let toads = [], slots = [], tricky = new Set(), owlX = 0;
-function geom() { const slotW = LINE_W / S.n, size = Math.min(TOAD_MAX, Math.floor(slotW - 12)); return { slotW, size, cx: i => slotW * (i + 0.5) }; }
+function geom() {
+  if (!big()) {
+    const slotW = LINE_W / S.n, size = Math.min(TOAD_MAX, Math.floor(slotW - 12));
+    return { slotW, size, cx: i => slotW * (i + 0.5), xy: i => [slotW * (i + 0.5) - size / 2, 0] };
+  }
+  if (geom.n === S.n) return geom.g;
+  let g = null;                       // the biggest cells that fit n toads in the grid area
+  for (let c = 48; c >= 3 && !g; c--) {
+    const gap = Math.max(1, Math.round(c * 0.2)), cols = Math.floor((LINE_W + gap) / (c + gap)), rows = Math.floor((GRID_H + gap) / (c + gap));
+    if (cols * rows >= S.n) g = { c, gap, cols, size: c };
+  }
+  const ox = (LINE_W - (g.cols * (g.c + g.gap) - g.gap)) / 2;
+  g.xy = i => [ox + (i % g.cols) * (g.c + g.gap), Math.floor(i / g.cols) * (g.c + g.gap)];
+  g.cx = i => g.xy(i)[0] + g.c / 2;
+  geom.n = S.n; geom.g = g;
+  return g;
+}
 function newInput() { tricky = new Set(shuffled([...Array(S.n).keys()]).slice(0, S.t)); }
 function buildLine() {
   lineEl.innerHTML = ''; toads = [];
-  const g = geom();
+  const g = geom(), B = big();
+  lineEl.parentElement.classList.toggle('bigline', B);
   for (let id = 0; id < S.n; id++) {
     const el = document.createElement('div');
+    if (B) {
+      el.className = 'toad cell';
+      el.style.width = el.style.height = g.c + 'px';
+      el.innerHTML = '<div class="faces" data-k="unknown"></div>';
+      lineEl.appendChild(el);
+      const t = { id, honest: !tricky.has(id), el, slot: id, faces: el.firstElementChild, badge: null };
+      toads.push(t); setX(t, id);
+      continue;
+    }
     el.className = 'toad';
     el.style.width = g.size + 'px';
     el.innerHTML = `<div class="faces" style="width:${g.size}px;height:${g.size}px">` +
@@ -284,11 +329,22 @@ function buildLine() {
     const t = { id, honest: !tricky.has(id), el, slot: id, faces: el.querySelector('.faces'), badge: el.querySelector('.badge') };
     toads.push(t); setX(t, id);
   }
+  ring = null;
+  if (B) { ring = document.createElement('div'); ring.id = 'simRing'; ring.style.width = ring.style.height = (g.c + 10) + 'px'; lineEl.appendChild(ring); }
   slots = toads.map(t => t.id);
   setOwl(0);
 }
-function setX(t, slot) { const g = geom(); t.slot = slot; t.el.style.transform = `translate(${g.cx(slot) - g.size / 2}px,0px)`; }
+let ring = null;
+function ringTo(slot, show) {
+  if (!ring) return;
+  ring.classList.remove('found');
+  const p = geom().xy(slot);
+  ring.style.transform = `translate(${p[0] - 5}px,${p[1] - 5}px)`;
+  ring.style.opacity = show === false ? 0 : 1;
+}
+function setX(t, slot) { const p = geom().xy(slot); t.slot = slot; t.el.style.transform = `translate(${p[0]}px,${p[1]}px)`; }
 function face(t, k, instant) {
+  if (!t.badge) { t.faces.dataset.k = k; return; }          // a cell: its colour says it
   t.faces.querySelectorAll('.f').forEach(img => {
     const on = img.dataset.k === k; img.classList.toggle('on', on);
     const target = on ? 1 : 0, cur = parseFloat(getComputedStyle(img).opacity);
@@ -299,7 +355,7 @@ function face(t, k, instant) {
     a.finished.then(() => { img.style.opacity = target; a.cancel(); }, () => {});
   });
 }
-function owlTarget(slot) { return geom().cx(slot) - OWL / 2; }
+function owlTarget(slot) { const x = geom().cx(slot) - OWL / 2; return big() ? Math.max(0, Math.min(LINE_W - OWL, x)) : x; }
 function setOwl(slot) { owlX = owlTarget(slot); owlEl.style.transform = `translate(${owlX}px,0px)`; }
 async function moveOwl(slot, tok) {
   const x1 = owlTarget(slot), x0 = owlX;
@@ -315,6 +371,11 @@ async function moveOwl(slot, tok) {
 }
 function inspect() { anim(owlImg, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(-9deg)' }, { transform: 'rotate(7deg)' }, { transform: 'rotate(0deg)' }], { duration: D(360), easing: 'ease-in-out' }); }
 async function reveal(t, tok, again) {
+  if (!t.badge) {
+    face(t, t.honest ? 'honest' : 'tricky');
+    await fin(anim(t.faces, [{ transform: 'scale(1)' }, { transform: 'scale(1.5)' }, { transform: 'scale(1)' }], { duration: D(380), easing: 'cubic-bezier(.3,.7,.3,1.3)' }), tok);
+    return;
+  }
   if (!again) {
     face(t, t.honest ? 'honest' : 'tricky');
     anim(t.faces, [{ transform: 'scale(1)' }, { transform: 'scale(1.16)' }, { transform: 'scale(1)' }], { duration: D(380), easing: 'cubic-bezier(.3,.7,.3,1.3)' });
@@ -328,6 +389,10 @@ async function reveal(t, tok, again) {
 }
 async function celebrate(t, tok) {
   t.el.classList.add('win');
+  if (!t.badge) {
+    await fin(anim(t.faces, [{ transform: 'scale(1)' }, { transform: 'scale(1.7)', offset: 0.4 }, { transform: 'scale(1)' }], { duration: D(720), easing: 'cubic-bezier(.3,.7,.3,1)' }), tok);
+    return;
+  }
   await fin(anim(t.faces, [{ transform: 'translateY(0) scale(1)' }, { transform: 'translateY(-30px) scale(1.12)', offset: 0.4 }, { transform: 'translateY(0) scale(.95)', offset: 0.75 }, { transform: 'translateY(0) scale(1)' }],
     { duration: D(720), easing: 'cubic-bezier(.3,.7,.3,1)' }), tok);
 }
@@ -337,19 +402,32 @@ async function lineUpAgain(tok) {
   toads.forEach(t => {
     t.el.classList.remove('win');
     face(t, 'unknown');
-    t.badge.getAnimations().forEach(a => a.cancel());
-    t.badge.style.opacity = 0; t.badge.style.transform = 'scale(0)';
+    if (t.badge) { t.badge.getAnimations().forEach(a => a.cancel()); t.badge.style.opacity = 0; t.badge.style.transform = 'scale(0)'; }
     if (t.slot !== t.id) {
-      const x0 = g.cx(t.slot) - g.size / 2, x1 = g.cx(t.id) - g.size / 2;
-      anims.push([t, anim(t.el, [{ transform: `translate(${x0}px,0px)` }, { transform: `translate(${x1}px,0px)` }], { duration: D(520), easing: 'cubic-bezier(.4,0,.2,1)' })]);
+      const [x0, y0] = g.xy(t.slot), [x1, y1] = g.xy(t.id);
+      anims.push([t, anim(t.el, [{ transform: `translate(${x0}px,${y0}px)` }, { transform: `translate(${x1}px,${y1}px)` }], { duration: D(520), easing: 'cubic-bezier(.4,0,.2,1)' })]);
     }
   });
+  ringTo(0, false);
   for (const [, a] of anims) await fin(a, tok);
   anims.forEach(([t, a]) => { setX(t, t.id); a.cancel(); });
   slots = toads.map(t => t.id);
 }
 async function animateToOrder(order, tok) {
   const g = geom(), anims = [];
+  if (big()) {                        // every cell moves to its new place at once, the whole line in about a second
+    order.forEach((id, slot) => {
+      const t = toads[id];
+      if (t.slot === slot) return;
+      const [x0, y0] = g.xy(t.slot), [x1, y1] = g.xy(slot), lift = reduceMotion ? 0 : -Math.min(24, 6 + g.c);
+      anims.push([t, slot, anim(t.el, [{ transform: `translate(${x0}px,${y0}px)` }, { transform: `translate(${(x0 + x1) / 2}px,${Math.min(y0, y1) + lift}px)`, offset: 0.5 },
+        { transform: `translate(${x1}px,${y1}px)` }], { duration: D(700), delay: D(400 * slot / order.length), easing: 'cubic-bezier(.45,0,.2,1)' })]);
+    });
+    for (const [, , a] of anims) await fin(a, tok);
+    anims.forEach(([t, slot, a]) => { setX(t, slot); a.cancel(); });
+    slots = order.slice();
+    return;
+  }
   order.forEach((id, slot) => {
     const t = toads[id];
     if (t.slot === slot) return;
@@ -375,7 +453,7 @@ function metersReset() {
   shufFill.getAnimations().forEach(a => a.cancel());
   shufFill.style.transform = 'scaleX(0)';
   shufVal.textContent = '0 steps';
-  qSegs.innerHTML = '<i></i>'.repeat(S.n);
+  qSegs.innerHTML = big() ? '<span class="qtrack"><span class="qfill"></span></span>' : '<i></i>'.repeat(S.n);
   qVal.textContent = '0 asks';
 }
 function shuffleMeter(tok, ms) {
@@ -390,8 +468,9 @@ function shuffleMeter(tok, ms) {
   raf(tick);
 }
 function askMeter(k) {
-  const segs = qSegs.children;
-  if (k <= segs.length) { segs[k - 1].classList.add('on'); anim(segs[k - 1], [{ transform: 'scaleY(.3)', opacity: .3 }, { transform: 'scaleY(1)', opacity: 1 }], { duration: 260, easing: 'ease-out', fill: 'none' }); }
+  const segs = qSegs.children, qf = qSegs.querySelector('.qfill');
+  if (qf) qf.style.width = `max(3px, ${100 * k / S.n}%)`;            // a bar: asks out of n
+  else if (k <= segs.length) { segs[k - 1].classList.add('on'); anim(segs[k - 1], [{ transform: 'scaleY(.3)', opacity: .3 }, { transform: 'scaleY(1)', opacity: 1 }], { duration: 260, easing: 'ease-out', fill: 'none' }); }
   qVal.textContent = k + (k === 1 ? ' ask' : ' asks');
   anim(qVal, [{ transform: 'scale(1.25)' }, { transform: 'scale(1)' }], { duration: 260, easing: 'ease-out', fill: 'none' });
 }
@@ -455,6 +534,30 @@ function summary(steps, asks, state) {
     : `This run: shuffle <b>${steps} steps</b> + ${a}` + (state === 'done' ? ` = <b>${steps + asks} steps</b>` : '');
 }
 
+/* a quick sweep over the toads in slots i..j-1 (all tricky): each turns purple and is counted on the for / ask / if lines */
+function sweep(i, j, asked, tok) {
+  const ms = D(Math.min(2600, 400 + (j - i) * 30));
+  return new Promise((res, rej) => {
+    let done = i, acc = 0, last = now();
+    const step = () => {
+      if (tok !== S.token) return rej(ABORT);
+      const t = now(); if (!S.paused) acc += t - last; last = t;
+      const upto = Math.min(j, i + Math.ceil((j - i) * Math.min(1, acc / ms)));
+      if (upto > done) {
+        for (let k = done; k < upto; k++) face(toads[slots[k]], 'tricky');
+        [2, 3, 4].forEach(line => { counts[line - 1] += upto - done; stmt(line).querySelector('.ct').textContent = '×' + counts[line - 1]; });
+        done = upto;
+        const qf = qSegs.querySelector('.qfill'); if (qf) qf.style.width = `max(3px, ${100 * (asked + done - i) / S.n}%)`;
+        qVal.textContent = (asked + done - i) + ' asks';
+        summary(S.n, asked + done - i, 'run');
+        setOwl(done - 1); ringTo(done - 1);
+      }
+      if (done >= j) res(); else raf(step);
+    };
+    raf(step);
+  });
+}
+
 /* Algorithm 3, animated */
 async function runAlg3(tok) {
   const w = ms => wait(D(ms), tok);
@@ -465,14 +568,25 @@ async function runAlg3(tok) {
     : shuffled(toads.map(t => t.id));
   say(worst ? 'the worst order: every tricky toad comes first' : 'put the toads in a random order');
   summary(S.n, 0, 'run');
-  shuffleMeter(tok, D(780 + S.n * 55));
+  shuffleMeter(tok, big() ? D(1100) : D(780 + S.n * 55));
   await animateToOrder(order, tok);
   await w(200);
   let asks = 0;
   for (let i = 0; i < S.n; i++) {
+    if (big() && i >= 3 && !toads[slots[i]].honest) {
+      // a long run of tricky toads: the loop still asks each one (all counted), shown as a quick sweep
+      let j = i; while (j < S.n && !toads[slots[j]].honest) j++;
+      hl(3); say(`fast-forward: the expert checks the next ${j - i} toads in order…`);
+      await sweep(i, j, asks, tok);
+      asks += j - i; askMeter(asks); summary(S.n, asks, 'run');
+      say(`${j - i} more tricky toads. keep going.`); await w(500);
+      i = j - 1;
+      continue;
+    }
     hl(2); count(2); await w(240);
     const t = toads[slots[i]];
     hl(3); say(`ask the expert if toad #${t.id} is trustworthy`);
+    ringTo(i);
     await moveOwl(i, tok);
     count(3); asks++; askMeter(asks); summary(S.n, asks, 'run');
     inspect();
@@ -481,6 +595,7 @@ async function runAlg3(tok) {
     if (t.honest) {
       hl(5); count(5); say(`#${t.id} is trustworthy! return toad #${t.id}.`);
       await celebrate(t, tok);
+      if (ring) { ringTo(i); ring.classList.add('found'); }   // the returned toad keeps a gold ring
       sleepRest(new Set(slots.slice(0, i + 1)));
       summary(S.n, asks, 'done');
       return asks;
@@ -572,6 +687,7 @@ class Chart {
   }
   begin() { const { ctx, k } = this; ctx.setTransform(k, 0, 0, k, 0, 0); ctx.clearRect(0, 0, this.W, this.H); return ctx; }
 }
+const niceStep = x => { const p = Math.pow(10, Math.floor(Math.log10(x))); return [1, 2, 5, 10].map(k => k * p).find(s => s >= x); };
 class ConvChart extends Chart {
   constructor(c) { super(c); this.reset(); }
   reset() { this.vals = []; this.avg = []; this.births = []; this.shown = 0; this.lx = 1; this.ym = 4; this.sum = 0; this.anyInf = false; }
@@ -587,14 +703,13 @@ class ConvChart extends Chart {
     const tlx = Math.max(1, Math.ceil(Math.log10(Math.max(10, N))));
     this.lx += (tlx - this.lx) * Math.min(1, dt * 5);
     const E = theoryMean();
-    let ty = Math.max(3, Math.ceil(E) + 1, stats.max + 1);
-    ty = Math.min(ty, 16);
+    const ty = Math.max(3, Math.ceil(E) + 1, stats.max + 1);
     this.ym += (ty - this.ym) * Math.min(1, dt * 5);
     this.shown += (N - this.shown) * Math.min(1, dt * 6); if (Math.abs(N - this.shown) < 0.02) this.shown = N;
     const X = i => m.l + (Math.log10(i) / this.lx) * pw;
     const Y = v => m.t + ph - (Math.min(v, this.ym) / this.ym) * ph;
     ctx.lineWidth = 1; ctx.strokeStyle = C('--rule'); ctx.fillStyle = C('--muted'); ctx.font = "16px Lexend, 'JetBrains Mono', sans-serif";
-    const ystep = this.ym > 9 ? 2 : 1;
+    const ystep = this.ym > 16 ? niceStep(this.ym / 5) : (this.ym > 9 ? 2 : 1);
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
     for (let v = 0; v <= this.ym + 0.01; v += ystep) { const y = Y(v); ctx.beginPath(); ctx.moveTo(m.l, y); ctx.lineTo(m.l + pw, y); ctx.stroke(); ctx.fillText(String(v), m.l - 9, y); }
     ctx.textAlign = 'center'; ctx.textBaseline = 'top';
@@ -657,9 +772,13 @@ class HistChart extends Chart {
     const ctx = this.begin(), W = this.W, H = this.H;
     const m = { l: 54, r: 14, t: 18, b: 26 }, pw = W - m.l - m.r, ph = H - m.t - m.b;
     const N = stats.n;
-    const K = S.t + 1;
+    const KK = S.t + 1, K = KK > 8 ? 7 : KK;          // more than 8 possible answers: 1 .. 6 asks and a '7+ asks' bucket
     const targets = [];
-    for (let k = 1; k <= K; k++) targets.push(N ? (stats.counts[k] || 0) / N : 0);
+    for (let k = 1; k <= K; k++) {
+      let c = stats.counts[k] || 0;
+      if (KK > 8 && k === 7) { c = 0; for (let j = 7; j < stats.counts.length; j++) c += stats.counts[j] || 0; }
+      targets.push(N ? c / N : 0);
+    }
     while (this.disp.length < K) this.disp.push(0);
     this.disp.length = K;
     for (let i = 0; i < K; i++) this.disp[i] += (targets[i] - this.disp[i]) * Math.min(1, dt * 7);
@@ -679,7 +798,7 @@ class HistChart extends Chart {
       ctx.moveTo(cx - bw / 2, m.t + ph); ctx.lineTo(cx - bw / 2, y + r); ctx.quadraticCurveTo(cx - bw / 2, y, cx - bw / 2 + r, y);
       ctx.lineTo(cx + bw / 2 - r, y); ctx.quadraticCurveTo(cx + bw / 2, y, cx + bw / 2, y + r); ctx.lineTo(cx + bw / 2, m.t + ph); ctx.closePath(); ctx.fill();
       ctx.fillStyle = C('--ink'); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.font = "600 16px Lexend, 'JetBrains Mono', sans-serif";
-      ctx.fillText(i === 0 ? '1 ask' : (i + 1) + ' asks', cx, m.t + ph + 6);
+      ctx.fillText(KK > 8 && i === 6 ? '7+ asks' : (i === 0 ? '1 ask' : (i + 1) + ' asks'), cx, m.t + ph + 6);
       if (N && h > 0.004) { ctx.textBaseline = 'bottom'; ctx.fillStyle = C('--blue'); ctx.fillText(Math.round(targets[i] * 100) + '%', cx, y - 5); }
     }
     ctx.strokeStyle = C('--ink'); ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(m.l, m.t); ctx.lineTo(m.l, m.t + ph); ctx.lineTo(m.l + pw, m.t + ph); ctx.stroke();
@@ -720,13 +839,14 @@ function freshSetup(msg) {
 function syncSliders() {
   const tmax = Math.ceil(S.n / 2) - 1;
   const rT = $('#simT'); rT.max = tmax; if (S.t > tmax) S.t = tmax; rT.value = S.t;
+  $('#simN').value = Math.max(0, NS.indexOf(S.n)); $('#simN').setAttribute('aria-valuetext', S.n + ' toads');
   $('#simVN').textContent = S.n; $('#simVT').textContent = S.t;
   $('#simPopH').style.width = ((S.n - S.t) / S.n * 100) + '%'; $('#simPopT').style.width = (S.t / S.n * 100) + '%';
 }
 segment('#simDice', 'dice', v => v, () => freshSetup(S.dice === 'bad' ? 'the worst order: every tricky toad first. press Play.' : 'a random order again. press Play.'));
 segment('#simSpeed', 'speed', v => v, () => {});
 const rN = $('#simN'), rT = $('#simT');
-rN.addEventListener('input', e => { S.n = +e.target.value; syncSliders(); });
+rN.addEventListener('input', e => { S.n = NS[+e.target.value]; syncSliders(); });
 rN.addEventListener('change', e => { newInput(); freshSetup(`${S.n} toads, ${S.t} tricky. press Play.`); e.target.blur(); });
 rT.addEventListener('input', e => { S.t = +e.target.value; syncSliders(); });
 rT.addEventListener('change', e => { newInput(); freshSetup(`${S.n} toads, ${S.t} tricky. press Play.`); e.target.blur(); });

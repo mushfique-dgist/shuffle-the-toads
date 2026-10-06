@@ -9,7 +9,7 @@ There are n toads in DGIST, and strictly more than n/2 of them are trustworthy. 
 The page plays each run step by step next to the algorithm's code, and charts how many questions the runs needed:
 
 - **Random order** or **Worst order** (every tricky toad first)
-- **Toads** and **Tricky** sliders
+- **Toads** slider from 5 up to 1000 toads (above 20, each toad is drawn as a small cell), and a **Tricky** slider
 - **Play**, **Pause**, **Keep playing**, **+100 runs**, **Reset**, and three speeds
 
 Keyboard: Space play / pause · Enter one run · A keep playing · Q +100 runs · R reset · F full screen.
