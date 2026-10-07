@@ -192,7 +192,7 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body)
     <div id="simCellKey" aria-hidden="true"><span><i style="background:var(--purple-f);border:1px solid #6A44B8"></i>tricky</span><span><i style="background:var(--green-f);border:1px solid #2F7A2B"></i>trustworthy</span><span><i style="background:#D6D0C4;border:1px solid rgba(36,30,27,.38)"></i>not asked yet</span><span><i style="border:3px solid var(--blue)"></i>being asked</span><span><i style="border:3px solid var(--gold);box-shadow:0 0 6px 1px rgba(245,197,66,.9)"></i>returned</span></div>
     <p id="simNarr" aria-live="polite"></p>
     <div id="simMeters">
-      <div class="meter"><span class="lab">Shuffle</span><div class="track"><div id="simShufFill"></div></div><span class="mval" id="simShufVal">0 steps</span></div>
+      <div class="meter"><span class="lab">Random order</span><div class="track"><div id="simShufFill"></div></div><span class="mval" id="simShufVal">0 steps</span></div>
       <div class="meter"><span class="lab">Asks</span><div id="simQSegs"></div><span class="mval" id="simQVal">0 asks</span></div>
     </div>
   </div>
@@ -214,7 +214,7 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body)
     <div class="legend"><span><i class="sw" style="background:var(--sky)"></i><span id="simHistNote"></span></span></div>
   </div>
 </div>
-<p style="position:relative;margin:0;font-size:20px;line-height:1.35;color:#626970;flex:none"><b>t</b> = the number of trustworthy toads (t &gt; n/2), <b>p = t/n</b>. A run's running time = n shuffle steps + asks. Gold line: in a random order the average stays under the bound <b>1/p&#160;=&#160;n/t</b>&#160;asks; in the worst order (every tricky toad first) every run needs <b>n&#160;−&#160;t&#160;+&#160;1</b>&#160;asks.</p><p style="position:relative;margin:0;font-size:20px;line-height:1.3;color:#626970;flex:none"><b>Space</b> play / pause &#160;·&#160; <b>Enter</b> one run &#160;·&#160; <b>A</b> keep playing &#160;·&#160; <b>Q</b> +100 runs &#160;·&#160; <b>R</b> reset &#160;·&#160; <b>F</b> full screen &#160;·&#160; the sliders change the number of toads and tricky toads</p>
+<p style="position:relative;margin:0;font-size:20px;line-height:1.35;color:#626970;flex:none"><b>t</b> = the number of trustworthy toads (t &gt; n/2), and <b>p = t/n</b> is their share. Gold line: in a random order the average stays under the bound <b>1/p&#160;=&#160;n/t</b>&#160;asks; in the worst order (every tricky toad first) every run needs <b>n&#160;−&#160;t&#160;+&#160;1</b>&#160;asks.</p><p style="position:relative;margin:0;font-size:20px;line-height:1.3;color:#626970;flex:none"><b>Space</b> play / pause &#160;·&#160; <b>Enter</b> one run &#160;·&#160; <b>A</b> keep playing &#160;·&#160; <b>Q</b> +100 runs &#160;·&#160; <b>R</b> reset &#160;·&#160; <b>F</b> full screen &#160;·&#160; the sliders change the number of toads and tricky toads</p>
 </section>
 
 </div></div>
@@ -531,8 +531,8 @@ function count(line) {
 }
 function summary(steps, asks, state) {
   const a = `<b>${asks}</b> ${asks === 1 ? 'ask' : 'asks'}`;
-  runSum.innerHTML = state === 'idle' ? 'Running time of a run = n shuffle steps + asks'
-    : `Running time: <b>${steps}</b> shuffle steps + ${a}` + (state === 'done' ? ` = <b>${steps + asks} steps</b>` : '');
+  runSum.innerHTML = state === 'idle' ? 'Running time: O(n) random order + asks, Θ(1) each = O(n)'
+    : `Running time: O(n) random order + ${a}` + (state === 'done' ? ` = <b>O(n)</b>` : '');
 }
 
 /* a quick sweep over the toads in slots i..j-1 (all tricky): each turns purple and is counted on the for / ask / if lines */
@@ -660,17 +660,16 @@ const stats = { n: 0, sum: 0, dnf: 0, max: 0, counts: [] };
 function theoryMean() { return S.dice === 'fair' ? S.n / (S.n - S.t) : S.t + 1; }
 // t, as in our solution, is the number of trustworthy toads (S.t counts the tricky ones, so t = n - S.t and p = t/n)
 const trusty = () => S.n - S.t;
-const slideRef = (document.getElementById('s-sim') || { dataset: {} }).dataset;   // the deck slide says where each bound is proved
 const fmtBound = E => S.dice === 'fair' ? E.toFixed(2) : String(E);
 function boundLabel() { return S.dice === 'fair' ? 'bound 1/p = ' + fmtBound(theoryMean()) : 'bound n−t+1 = ' + fmtBound(theoryMean()); }
 function theoryLegend() {
   return S.dice === 'fair'
-    ? 'bound 1/p = n/t: the average stays under it' + (slideRef.refExp ? ` (slide ${slideRef.refExp})` : '')
-    : 'bound n − t + 1: every worst-order run needs it' + (slideRef.refWorst ? ` (slide ${slideRef.refWorst})` : '');
+    ? 'bound 1/p = n/t: the average stays under it'
+    : 'bound n − t + 1: every worst-order run needs it';
 }
 function histNote() {
   return S.dice === 'fair'
-    ? `1 ask: chance p = ${trusty()}/${S.n} ≈ ${Math.round(100 * trusty() / S.n)}%, and longer runs get rarer fast`
+    ? `1 ask: about p = ${trusty()}/${S.n} ≈ ${Math.round(100 * trusty() / S.n)}% of runs; longer runs are rarer`
     : `worst order: every run needs n − t + 1 = ${S.t + 1} asks`;
 }
 function axisTitles(ctx, m, pw, ph, xTitle, yTitle) {
